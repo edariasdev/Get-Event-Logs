@@ -2,13 +2,13 @@
 <#
 
  .VERSION 
-     2 - 1/6/2020
+     3 - 4/1/2020
 
  .AUTHOR  
-     mannydr3 
+     Ed Arias 
           
  .EMAIL 
-     mannydr3@hotmail.com
+     ed.arias.dev@gmail.com
 
  .SYNOPSIS 
      Queries listed or inputed servers and checks for specified Logs based on days and log type; outputs via the $Dest variable.
