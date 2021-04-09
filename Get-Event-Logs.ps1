@@ -1,8 +1,8 @@
-﻿
+
 <#
 
  .VERSION 
-     3 - 4/1/2020
+     4 - 4/6/2020
 
  .AUTHOR  
      Ed Arias 
@@ -45,7 +45,7 @@ IF ( -not ([Security.Principal.WindowsPrincipal] `
 
         CLS
         Write-Host ""
-        Write-Error "Must have administrator privileges to run this script."
+        Write-Warning "Must have administrator privileges to run this script."
         Write-Host ""
         break
 
@@ -77,9 +77,9 @@ IF((Test-Path "c:\Temp\Logs") -match "False" -or "$null"){
 
         Write-Host "Exporting $LogType Logs from $Server to $Dest" -ForegroundColor Yellow
 
-        Get-Eventlog -LogName Application -Newest $LogCount `
+        Get-EventLog -LogName Application -Newest $LogCount `
         |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message| Export-Csv `
-        "c:\Temp\Logs\$ENV:COMPUTERNAME.Application.EventLog.csv"
+        "c:\Temp\Logs\$ENV:COMPUTERNAME.Application.EventLog.csv" -NoTypeInformation
 
                                              }
 
@@ -87,9 +87,9 @@ IF((Test-Path "c:\Temp\Logs") -match "False" -or "$null"){
 
         Write-Host "Exporting $LogType Logs from $Server to $Dest" -ForegroundColor Yellow
 
-        Get-Eventlog -LogName System -Newest $LogCount `
+        Get-EventLog -LogName System -Newest $LogCount `
         |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message| Export-Csv `
-        "c:\Temp\Logs\$ENV:COMPUTERNAME.System.EventLog.csv"
+        "c:\Temp\Logs\$ENV:COMPUTERNAME.System.EventLog.csv" -NoTypeInformation
 
                                         }
 
@@ -97,9 +97,9 @@ IF((Test-Path "c:\Temp\Logs") -match "False" -or "$null"){
 
         Write-Host "Exporting $LogType Logs from $Server to $Dest" -ForegroundColor Yellow
 
-        Get-Eventlog -LogName Security -Newest $LogCount `
+        Get-EventLog -LogName Security -Newest $LogCount `
         |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message| Export-Csv `
-        "c:\Temp\Logs\$ENV:COMPUTERNAME.Security.EventLog.csv"
+        "c:\Temp\Logs\$ENV:COMPUTERNAME.Security.EventLog.csv" -NoTypeInformation
 
 
                                           }
@@ -108,17 +108,17 @@ IF((Test-Path "c:\Temp\Logs") -match "False" -or "$null"){
 
             Write-Host "Exporting $LogType Logs from $Server to $Dest" -ForegroundColor Yellow
 
-            Get-Eventlog -LogName Security -Newest $LogCount `
+            Get-EventLog -LogName Security -Newest $LogCount `
             |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message| Export-Csv `
-            "c:\Temp\Logs\$ENV:COMPUTERNAME.Security.EventLog.csv"
+            "c:\Temp\Logs\$ENV:COMPUTERNAME.Security.EventLog.csv" -NoTypeInformation
 
-            Get-Eventlog -LogName Application -Newest $LogCount `
+            Get-EventLog -LogName Application -Newest $LogCount `
             |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message| Export-Csv `
-            "c:\Temp\Logs\$ENV:COMPUTERNAME.Application.EventLog.csv"
+            "c:\Temp\Logs\$ENV:COMPUTERNAME.Application.EventLog.csv" -NoTypeInformation
 
-            Get-Eventlog -LogName System -Newest $LogCount `
+            Get-EventLog -LogName System -Newest $LogCount `
             |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message| Export-Csv `
-            "c:\Temp\Logs\$ENV:COMPUTERNAME.System.EventLog.csv"
+            "c:\Temp\Logs\$ENV:COMPUTERNAME.System.EventLog.csv" -NoTypeInformation
             
             }
 
@@ -141,8 +141,9 @@ IF((Test-Path "c:\Temp\Logs") -match "False" -or "$null"){
 
         $Session = New-PSSession -ComputerName $Server
 
-        Invoke-Command -Session $Session {Get-Eventlog -LogName Application -Newest $using:LogCount `
-        |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message| Export-Csv "c:\Temp\$ENV:COMPUTERNAME.Application.EventLog.csv"}
+        Invoke-Command -Session $Session {Get-EventLog -LogName Application -Newest $using:LogCount `
+        |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message `
+        | Export-Csv "c:\Temp\$ENV:COMPUTERNAME.Application.EventLog.csv" -NoTypeInformation}
 
         Write-Host "Saving to $Dest as $Server.Application.EventLog.csv"
 
@@ -158,8 +159,9 @@ IF((Test-Path "c:\Temp\Logs") -match "False" -or "$null"){
 
         $Session = New-PSSession -ComputerName $Server
 
-        Invoke-Command -Session $Session {Get-Eventlog -LogName System -Newest $using:LogCount `
-        |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message| Export-Csv "c:\Temp\$ENV:COMPUTERNAME.System.EventLog.csv"}
+        Invoke-Command -Session $Session {Get-EventLog -LogName System -Newest $using:LogCount `
+        |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message `
+        | Export-Csv "c:\Temp\$ENV:COMPUTERNAME.System.EventLog.csv" -NoTypeInformation }
 
         Write-Host "Saving to $Dest as $Server.System.EventLog.csv"
 
@@ -175,8 +177,9 @@ IF((Test-Path "c:\Temp\Logs") -match "False" -or "$null"){
 
         $Session = New-PSSession -ComputerName $Server
 
-        Invoke-Command -Session $Session {Get-Eventlog -LogName Security -Newest $using:LogCount `
-        |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message| Export-Csv "c:\Temp\$ENV:COMPUTERNAME.Security.EventLog.csv"}
+        Invoke-Command -Session $Session {Get-EventLog -LogName Security -Newest $using:LogCount `
+        |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message `
+        | Export-Csv "c:\Temp\$ENV:COMPUTERNAME.Security.EventLog.csv"  -NoTypeInformation}
 
         Write-Host "Saving to $Dest as $Server.Setup.EventLog.csv"
 
@@ -204,14 +207,17 @@ IF((Test-Path "c:\Temp\Logs") -match "False" -or "$null"){
 
             $Session3 = New-PSSession -ComputerName $Server
 
-            Invoke-Command -Session $Session1 {Get-Eventlog -LogName Security -Newest $using:LogCount `
-            |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message| Export-Csv "c:\Temp\Logs\$ENV:COMPUTERNAME.Security.EventLog.csv"}
+            Invoke-Command -Session $Session1 {Get-EventLog -LogName Security -Newest $using:LogCount `
+            |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message `
+            | Export-Csv "c:\Temp\Logs\$ENV:COMPUTERNAME.Security.EventLog.csv" -NoTypeInformation}
 
-            Invoke-Command -Session $Session2 {Get-Eventlog -LogName Application -Newest $using:LogCount `
-            |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message| Export-Csv "c:\Temp\Logs\$ENV:COMPUTERNAME.Application.EventLog.csv"}
+            Invoke-Command -Session $Session2 {Get-EventLog -LogName Application -Newest $using:LogCount `
+            |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message `
+            | Export-Csv "c:\Temp\Logs\$ENV:COMPUTERNAME.Application.EventLog.csv" -NoTypeInformation}
 
-            Invoke-Command -Session $Session3 {Get-Eventlog -LogName System -Newest $using:LogCount `
-            |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message| Export-Csv "c:\Temp\Logs\$ENV:COMPUTERNAME.System.EventLog.csv"}
+            Invoke-Command -Session $Session3 {Get-EventLog -LogName System -Newest $using:LogCount `
+            |Select-Object TimeGenerated, MachineName, EventID, EntryType, Message `
+            | Export-Csv "c:\Temp\Logs\$ENV:COMPUTERNAME.System.EventLog.csv" -NoTypeInformation}
 
             Write-Host "Saving to $Dest as $Server.Security.EventLog.csv"
 
@@ -238,6 +244,12 @@ IF((Test-Path "c:\Temp\Logs") -match "False" -or "$null"){
         }
 
 ii "c:\Temp\Logs"
+
+
+
+
+
+
 
 
 
