@@ -17,7 +17,10 @@ Dumps local or remote events to .CSV files to Temp dir.
      $LogType: List Log type needed
 
      $LogCount: Number of entries to go back
-     
+ 
+ ![image](https://user-images.githubusercontent.com/22520564/209152087-8d30baab-b1a0-4a77-98a8-dc50791d4806.png)
+
+ 
  For More info:
  https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-eventlog?view=powershell-5.1
  
