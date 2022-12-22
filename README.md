@@ -18,6 +18,10 @@ Dumps local or remote events to .CSV files to Temp dir.
 
      $LogCount: Number of entries to go back
  
+ ![image](https://user-images.githubusercontent.com/22520564/209152289-2b427f23-cbc1-4140-9877-9863b21f6d8d.png)
+
+
+ 
  ![image](https://user-images.githubusercontent.com/22520564/209152087-8d30baab-b1a0-4a77-98a8-dc50791d4806.png)
 
  
